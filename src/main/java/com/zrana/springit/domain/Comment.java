@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Objects;
 
 @Entity
 @Data
@@ -17,5 +16,4 @@ public class Comment {
     @GeneratedValue
     private Long id;
     private String body;
-    public Comment() {}
 }
