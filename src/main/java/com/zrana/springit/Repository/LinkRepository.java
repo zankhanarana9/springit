@@ -6,8 +6,4 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface LinkRepository extends JpaRepository<Link, Long> {
 
-//    @Query("select l from Link l where l.Title=?1")
-//    Link findByTitle(String title);
-
-
 }
