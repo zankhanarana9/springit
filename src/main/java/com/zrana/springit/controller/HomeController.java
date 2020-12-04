@@ -1,14 +1,18 @@
 package com.zrana.springit.controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 //@RestController = @ResponseBody + @Controller
-@RestController
+@Controller
 public class HomeController {
-    @GetMapping("/")
-    public String home() {
-        return "Hello, Spring boot 2";
+    @GetMapping("/home")
+    public String home(Model model) {
+        model.addAttribute("title","Hello, thymeleaf");
+        return "home";
     }
 }
