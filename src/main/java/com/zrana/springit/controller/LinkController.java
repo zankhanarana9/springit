@@ -1,9 +1,12 @@
 package com.zrana.springit.controller;
 
+import com.zrana.springit.domain.Comment;
 import com.zrana.springit.domain.Link;
+import com.zrana.springit.repository.CommentRepository;
 import com.zrana.springit.repository.LinkRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,10 +25,13 @@ public class LinkController {
     private static final Logger logger = LoggerFactory.getLogger(LinkController.class);
 
     private LinkRepository linkRepository;
+    private CommentRepository commentRepository;
 
-    public LinkController(LinkRepository linkRepository) {
+    public LinkController(LinkRepository linkRepository, CommentRepository commentRepository) {
         this.linkRepository = linkRepository;
+        this.commentRepository = commentRepository;
     }
+
 
     @GetMapping("/")
     public String list(Model model) {
@@ -37,7 +43,11 @@ public class LinkController {
     public String list(@PathVariable Long id,Model model) {
         Optional<Link> link = linkRepository.findById(id);
         if(link.isPresent()) {
-            model.addAttribute("link", link.get());
+            Link currentLink = link.get();
+            Comment comment = new Comment();
+            comment.setLink(currentLink);
+            model.addAttribute("comment", comment);
+            model.addAttribute("link", currentLink);
             model.addAttribute("success", model.containsAttribute("success"));
             return "link/view";
         }
@@ -66,5 +76,19 @@ public class LinkController {
                     .addFlashAttribute("success",true);
             return "redirect:/link/{id}";
         }
+    }
+
+    @Secured({"ROLE_USER"})
+    @PostMapping("/link/comments")
+    public String addComment(@Valid Comment comment, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            logger.info("There was a problem adding a comment");
+        }
+        else {
+            commentRepository.save(comment);
+            logger.info("New comment was added successfully");
+        }
+
+        return "redirect:/link/" + comment.getLink().getId();
     }
 }

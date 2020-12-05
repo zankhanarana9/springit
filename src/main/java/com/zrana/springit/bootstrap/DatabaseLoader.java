@@ -1,5 +1,6 @@
 package com.zrana.springit.bootstrap;
 
+import com.zrana.springit.domain.Comment;
 import com.zrana.springit.domain.Link;
 import com.zrana.springit.domain.Role;
 import com.zrana.springit.domain.User;
@@ -52,7 +53,18 @@ public class DatabaseLoader implements CommandLineRunner {
         links.put("File download example using Spring REST Controller","https://www.jeejava.com/file-download-example-using-spring-rest-controller/");
 
         links.forEach((k,v) -> {
-            linkRepository.save(new Link(k,v));
+            Link link = new Link(k,v);
+            linkRepository.save(link);
+
+            Comment spring = new Comment("Thank you for this link related to spring boot", link);
+            Comment security = new Comment("I love that you're talking about Spring Security", link);
+            Comment pwa =  new Comment("What is this Progressive Web APP thing all about? PWAs are really cool", link);
+
+            Comment comments[] = {security,spring,pwa};
+            for(Comment comment: comments){
+                commentRepository.save(comment);
+                link.addComment(comment);
+            }
             // we will do something with comments later
         });
 
