@@ -10,7 +10,7 @@ public class AuditorAwareImpl implements AuditorAware {
 
     @Override
     public Optional getCurrentAuditor() {
-        if(SecurityContextHolder.getContext().getAuthentication() == null) {
+        if(SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
             return Optional.of("master@gmail.com");
         }
         return Optional.of(
